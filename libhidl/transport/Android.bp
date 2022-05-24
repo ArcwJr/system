@@ -24,7 +24,8 @@ cc_defaults {
         "libutils",
         "libhwbinder",
         "libcutils",
-        "libvndksupport"
+        "libvndksupport",
+        "libutilscallstack"
     ],
     export_shared_lib_headers: [
         "libutils",

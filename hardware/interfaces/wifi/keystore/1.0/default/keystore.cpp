@@ -63,7 +63,7 @@ using security::keystore::IKeystoreService;
 // Methods from ::android::hardware::wifi::keystore::V1_0::IKeystore follow.
 Return<void> Keystore::getBlob(const hidl_string& key, getBlob_cb _hidl_cb) {
     sp<IKeystoreService> service = interface_cast<IKeystoreService>(
-        defaultServiceManager()->getService(String16(kKeystoreServiceName)));
+        initdefaultServiceManager()->getService(String16(kKeystoreServiceName)));
     if (service == nullptr) {
         _hidl_cb(KeystoreStatusCode::ERROR_UNKNOWN, {});
         return Void();
@@ -80,7 +80,7 @@ Return<void> Keystore::getBlob(const hidl_string& key, getBlob_cb _hidl_cb) {
 }
 
 Return<void> Keystore::getPublicKey(const hidl_string& keyId, getPublicKey_cb _hidl_cb) {
-    sp<IServiceManager> sm = defaultServiceManager();
+    sp<IServiceManager> sm = initdefaultServiceManager();
     sp<IBinder> binder = sm->getService(String16(kKeystoreServiceName));
     sp<IKeystoreService> service = interface_cast<IKeystoreService>(binder);
 
@@ -135,7 +135,7 @@ static NullOr<const Algorithm&> getKeyAlgoritmFromKeyCharacteristics(
 
 Return<void> Keystore::sign(const hidl_string& keyId, const hidl_vec<uint8_t>& dataToSign,
                             sign_cb _hidl_cb) {
-    sp<IServiceManager> sm = defaultServiceManager();
+    sp<IServiceManager> sm = initdefaultServiceManager();
     sp<IBinder> binder = sm->getService(String16(kKeystoreServiceName));
     sp<IKeystoreService> service = interface_cast<IKeystoreService>(binder);
 

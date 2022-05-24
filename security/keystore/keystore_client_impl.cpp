@@ -58,7 +58,7 @@ using keystore::KeyStoreServiceReturnCode;
 namespace keystore {
 
 KeystoreClientImpl::KeystoreClientImpl() {
-    service_manager_ = android::defaultServiceManager();
+    service_manager_ = android::initdefaultServiceManager();
     keystore_binder_ = service_manager_->getService(String16("android.security.keystore"));
     keystore_ =
         android::interface_cast<android::security::keystore::IKeystoreService>(keystore_binder_);

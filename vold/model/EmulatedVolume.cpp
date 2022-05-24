@@ -119,8 +119,8 @@ status_t EmulatedVolume::doMount() {
         }
     }
     /* sdcardfs will have exited already. FUSE will still be running */
-    TEMP_FAILURE_RETRY(waitpid(mFusePid, nullptr, 0));
-    mFusePid = 0;
+    if (TEMP_FAILURE_RETRY(waitpid(mFusePid, nullptr, WNOHANG)) == mFusePid)
+        mFusePid = 0;
 
     return OK;
 }

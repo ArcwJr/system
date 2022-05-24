@@ -27,6 +27,7 @@
 #include <android-base/file.h>
 #include <android-base/logging.h>
 #include <android-base/unique_fd.h>
+#include <android-base/properties.h>
 
 using android::base::Timer;
 using android::base::unique_fd;
@@ -63,6 +64,10 @@ void FirmwareHandler::ProcessFirmwareEvent(const Uevent& uevent) {
     int booting = IsBooting();
 
     LOG(INFO) << "firmware: loading '" << uevent.firmware << "' for '" << uevent.path << "'";
+
+    if (android::base::GetProperty("ro.boot.vm", "0") == "1") {
+        return;
+    }
 
     std::string root = "/sys" + uevent.path;
     std::string loading = root + "/loading";

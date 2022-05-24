@@ -24,7 +24,7 @@ using namespace android;
 using namespace keystore;
 
 ssize_t keystore_get(const char* key, size_t keyLength, uint8_t** value) {
-    sp<IServiceManager> sm = defaultServiceManager();
+    sp<IServiceManager> sm = initdefaultServiceManager();
     sp<IBinder> binder = sm->getService(String16("android.security.keystore"));
     sp<android::security::keystore::IKeystoreService> service =
         interface_cast<android::security::keystore::IKeystoreService>(binder);

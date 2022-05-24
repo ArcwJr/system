@@ -54,7 +54,7 @@ class ConfirmationListener
 TEST(ConfirmationInvocationTest, InvokeAndCancel) {
     android::ProcessState::self()->startThreadPool();
 
-    sp<IServiceManager> sm = android::defaultServiceManager();
+    sp<IServiceManager> sm = android::initdefaultServiceManager();
     sp<IBinder> binder = sm->getService(String16("android.security.keystore"));
     sp<IKeystoreService> service = android::interface_cast<IKeystoreService>(binder);
     ASSERT_TRUE(service);

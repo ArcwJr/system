@@ -376,7 +376,7 @@ int List(const std::string& prefix) {
 
 int ListAppsWithKeys() {
 
-    sp<android::IServiceManager> sm = android::defaultServiceManager();
+    sp<android::IServiceManager> sm = android::initdefaultServiceManager();
     sp<android::IBinder> binder = sm->getService(String16("android.security.keystore"));
     sp<IKeystoreService> service = android::interface_cast<IKeystoreService>(binder);
     if (service == nullptr) {
@@ -515,7 +515,7 @@ class ConfirmationListener
 int Confirmation(const std::string& promptText, const std::string& extraDataHex,
                  const std::string& locale, const std::string& uiOptionsStr,
                  const std::string& cancelAfter) {
-    sp<android::IServiceManager> sm = android::defaultServiceManager();
+    sp<android::IServiceManager> sm = android::initdefaultServiceManager();
     sp<android::IBinder> binder = sm->getService(String16("android.security.keystore"));
     sp<IKeystoreService> service = android::interface_cast<IKeystoreService>(binder);
     if (service == nullptr) {

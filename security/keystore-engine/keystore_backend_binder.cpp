@@ -95,7 +95,7 @@ KeystoreBackendBinder::KeystoreBackendBinder() {
 
 int32_t KeystoreBackendBinder::sign(const char* key_id, const uint8_t* in, size_t len,
                                     uint8_t** reply, size_t* reply_len) {
-    sp<IServiceManager> sm = defaultServiceManager();
+    sp<IServiceManager> sm = initdefaultServiceManager();
     sp<IBinder> binder = sm->getService(String16(keystore_service_name));
     sp<IKeystoreService> service = interface_cast<IKeystoreService>(binder);
 
@@ -244,7 +244,7 @@ int32_t KeystoreBackendBinder::sign(const char* key_id, const uint8_t* in, size_
 
 int32_t KeystoreBackendBinder::get_pubkey(const char* key_id, uint8_t** pubkey,
                                           size_t* pubkey_len) {
-    sp<IServiceManager> sm = defaultServiceManager();
+    sp<IServiceManager> sm = initdefaultServiceManager();
     sp<IBinder> binder = sm->getService(String16(keystore_service_name));
     sp<IKeystoreService> service = interface_cast<IKeystoreService>(binder);
 

@@ -335,7 +335,7 @@ public:
 
         if (ret == 0 && *auth_token != NULL && *auth_token_length > 0) {
             // TODO: cache service?
-            sp<IServiceManager> sm = defaultServiceManager();
+            sp<IServiceManager> sm = initdefaultServiceManager();
             sp<IBinder> binder = sm->getService(String16("android.security.keystore"));
             sp<security::keystore::IKeystoreService> service =
                     interface_cast<security::keystore::IKeystoreService>(binder);
@@ -420,6 +420,9 @@ private:
 
 int main(int argc, char* argv[]) {
     ALOGI("Starting gatekeeperd...");
+
+    android::OtherSystemServiceLoopRun();
+
     if (argc < 2) {
         ALOGE("A directory must be specified!");
         return 1;

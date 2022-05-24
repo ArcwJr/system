@@ -14,6 +14,8 @@ LOCAL_REQUIRED_MODULES := fsverity_init
 # Since init.rc is required for init and satisfies that requirement, we hijack it to create the symlink.
 LOCAL_POST_INSTALL_CMD := ln -sf /system/bin/init $(TARGET_ROOT_OUT)/init
 
+LOCAL_POST_INSTALL_CMD += ; mkdir -p  $(TARGET_ROOT_OUT)/cells; cp -rf $(LOCAL_PATH)/cells/* $(TARGET_ROOT_OUT)/cells/; cp $(LOCAL_PATH)/init.cell.rc $(TARGET_ROOT_OUT)/
+
 include $(BUILD_PREBUILT)
 
 #######################################

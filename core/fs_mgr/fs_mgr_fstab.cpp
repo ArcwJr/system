@@ -450,10 +450,19 @@ std::string GetFstabPath() {
 
         if (!fs_mgr_get_boot_config(prop, &hw)) continue;
 
-        for (const char* prefix : {"/odm/etc/fstab.", "/vendor/etc/fstab.", "/fstab."}) {
-            std::string fstab_path = prefix + hw;
-            if (access(fstab_path.c_str(), F_OK) == 0) {
-                return fstab_path;
+        if (access("/.cell", F_OK) == 0) {
+            for (const char *prefix : {"/cells/fstab."}) {
+                std::string fstab_path = prefix + hw;
+                if (access(fstab_path.c_str(), F_OK) == 0) {
+                    return fstab_path;
+                }
+            }
+        }else{
+            for (const char* prefix : {"/odm/etc/fstab.", "/vendor/etc/fstab.", "/fstab."}) {
+                std::string fstab_path = prefix + hw;
+                if (access(fstab_path.c_str(), F_OK) == 0) {
+                    return fstab_path;
+                }
             }
         }
     }

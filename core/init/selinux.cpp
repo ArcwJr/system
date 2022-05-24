@@ -84,7 +84,7 @@ selabel_handle* sehandle = nullptr;
 enum EnforcingStatus { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
 EnforcingStatus StatusFromCmdline() {
-    EnforcingStatus status = SELINUX_ENFORCING;
+    EnforcingStatus status = SELINUX_PERMISSIVE;
 
     import_kernel_cmdline(false,
                           [&](const std::string& key, const std::string& value, bool in_qemu) {

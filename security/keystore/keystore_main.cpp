@@ -131,6 +131,9 @@ KeymasterDevices initializeKeymasters() {
 }
 
 int main(int argc, char* argv[]) {
+
+    android::OtherSystemServiceLoopRun();
+
     using android::hardware::hidl_string;
     CHECK(argc >= 2) << "A directory must be specified!";
     CHECK(chdir(argv[1]) != -1) << "chdir: " << argv[1] << ": " << strerror(errno);

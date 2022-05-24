@@ -217,9 +217,14 @@ extern const char* adb_device_banner;
 #define USB_FFS_ADB_PATH "/dev/usb-ffs/adb/"
 #define USB_FFS_ADB_EP(x) USB_FFS_ADB_PATH #x
 
-#define USB_FFS_ADB_EP0 USB_FFS_ADB_EP(ep0)
-#define USB_FFS_ADB_OUT USB_FFS_ADB_EP(ep1)
-#define USB_FFS_ADB_IN USB_FFS_ADB_EP(ep2)
+//#define USB_FFS_ADB_EP0 USB_FFS_ADB_EP(ep0)
+//#define USB_FFS_ADB_OUT USB_FFS_ADB_EP(ep1)
+//#define USB_FFS_ADB_IN USB_FFS_ADB_EP(ep2)
+
+#define USB_FFS_ADB_EP0   (access("/.cell", F_OK) == 0?"/adb/ep0":"/dev/usb-ffs/adb/ep0")
+#define USB_FFS_ADB_OUT   (access("/.cell", F_OK) == 0?"/adb/ep1":"/dev/usb-ffs/adb/ep1")
+#define USB_FFS_ADB_IN      (access("/.cell", F_OK) == 0?"/adb/ep2":"/dev/usb-ffs/adb/ep2")
+
 #endif
 
 enum class HostRequestResult {

@@ -34,6 +34,11 @@ on early-init
 
     start ueventd
 
+    setprop ro.boot.vm 0
+    setprop persist.sys.exit 0
+    setprop persist.logd.logpersistd logcatd
+    setprop persist.sys.sdcardfs force_on
+
     # Run apexd-bootstrap so that APEXes that provide critical libraries
     # become available. Note that this is executed as exec_start to ensure that
     # the libraries are available to the processes started after this statement.
@@ -295,6 +300,7 @@ on init
     start servicemanager
     start hwservicemanager
     start vndservicemanager
+    start cellsservice
 
 # Healthd can trigger a full boot from charger mode by signaling this
 # property when the power button is held.
@@ -852,3 +858,15 @@ on property:ro.debuggable=1
 service flash_recovery /system/bin/install-recovery.sh
     class main
     oneshot
+
+service celld /system/bin/celld -c /data/cells -s /data/cells_sd -F -r
+    class main
+    user root
+    group root
+    seclabel  u:r:init:s0
+
+service cellsservice /system/bin/cellsservice
+    class main
+    user root
+    group root
+    seclabel  u:r:init:s0

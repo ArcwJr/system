@@ -55,6 +55,9 @@
 
 #include "mdns.h"
 
+#include "cutils/properties.h"
+
+
 #if defined(__ANDROID__)
 static const char* root_seclabel = nullptr;
 
@@ -273,6 +276,19 @@ int main(int argc, char** argv) {
     // Set M_DECAY_TIME so that our allocations aren't immediately purged on free.
     mallopt(M_DECAY_TIME, 1);
 #endif
+
+    char value[PROPERTY_VALUE_MAX];
+    do{
+        property_get("persist.sys.exit", value, "1");
+        if (strcmp(value, "0") == 0) {
+            //perror("persist.sys.exit 0");
+            break;
+        }else{
+            //perror("persist.sys.exit 1");
+            property_set("ctl.stop", "adbd");
+            return 0;
+        }
+    }while(true);
 
     while (true) {
         static struct option opts[] = {

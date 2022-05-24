@@ -59,7 +59,7 @@ class WifiKeystoreHalTest : public Test {
         keystore = IKeystore::getService();
         ASSERT_TRUE(keystore);
 
-        sp<android::IServiceManager> service_manager = android::defaultServiceManager();
+        sp<android::IServiceManager> service_manager = android::initdefaultServiceManager();
         sp<android::IBinder> keystore_binder =
             service_manager->getService(String16(kKeystoreServiceName));
         service = interface_cast<IKeystoreService>(keystore_binder);

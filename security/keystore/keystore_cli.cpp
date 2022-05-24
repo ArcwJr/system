@@ -214,7 +214,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    sp<IServiceManager> sm = defaultServiceManager();
+    sp<IServiceManager> sm = initdefaultServiceManager();
     sp<IBinder> binder = sm->getService(String16("android.security.keystore"));
     sp<IKeystoreService> service = interface_cast<IKeystoreService>(binder);
 

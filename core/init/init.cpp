@@ -127,26 +127,37 @@ Parser CreateServiceOnlyParser(ServiceList& service_list) {
 static void LoadBootScripts(ActionManager& action_manager, ServiceList& service_list) {
     Parser parser = CreateParser(action_manager, service_list);
 
-    std::string bootscript = GetProperty("ro.boot.init_rc", "");
-    if (bootscript.empty()) {
+    if(access("/.cell", F_OK) == 0){
+        LOG(INFO) << "LOAD VP RC...";
         parser.ParseConfig("/init.rc");
-        if (!parser.ParseConfig("/system/etc/init")) {
-            late_import_paths.emplace_back("/system/etc/init");
+        if (!parser.ParseConfig("/cells/system")) {
+            late_import_paths.emplace_back("/cells/system");
         }
-        if (!parser.ParseConfig("/product/etc/init")) {
-            late_import_paths.emplace_back("/product/etc/init");
+        if (!parser.ParseConfig("/cells/vendor")) {
+            late_import_paths.emplace_back("/cells/vendor");
         }
-        if (!parser.ParseConfig("/product_services/etc/init")) {
-            late_import_paths.emplace_back("/product_services/etc/init");
+    }else{
+        std::string bootscript = GetProperty("ro.boot.init_rc", "");
+        if (bootscript.empty()) {
+            parser.ParseConfig("/init.rc");
+            if (!parser.ParseConfig("/system/etc/init")) {
+                late_import_paths.emplace_back("/system/etc/init");
+            }
+            if (!parser.ParseConfig("/product/etc/init")) {
+                late_import_paths.emplace_back("/product/etc/init");
+            }
+            if (!parser.ParseConfig("/product_services/etc/init")) {
+                late_import_paths.emplace_back("/product_services/etc/init");
+            }
+            if (!parser.ParseConfig("/odm/etc/init")) {
+                late_import_paths.emplace_back("/odm/etc/init");
+            }
+            if (!parser.ParseConfig("/vendor/etc/init")) {
+                late_import_paths.emplace_back("/vendor/etc/init");
+            }
+        } else {
+            parser.ParseConfig(bootscript);
         }
-        if (!parser.ParseConfig("/odm/etc/init")) {
-            late_import_paths.emplace_back("/odm/etc/init");
-        }
-        if (!parser.ParseConfig("/vendor/etc/init")) {
-            late_import_paths.emplace_back("/vendor/etc/init");
-        }
-    } else {
-        parser.ParseConfig(bootscript);
     }
 }
 
@@ -180,17 +191,19 @@ void property_changed(const std::string& name, const std::string& value) {
     // waiting on a property.
     // In non-thermal-shutdown case, 'shutdown' trigger will be fired to let device specific
     // commands to be executed.
-    if (name == "sys.powerctl") {
-        // Despite the above comment, we can't call HandlePowerctlMessage() in this function,
-        // because it modifies the contents of the action queue, which can cause the action queue
-        // to get into a bad state if this function is called from a command being executed by the
-        // action queue.  Instead we set this flag and ensure that shutdown happens before the next
-        // command is run in the main init loop.
-        // TODO: once property service is removed from init, this will never happen from a builtin,
-        // but rather from a callback from the property service socket, in which case this hack can
-        // go away.
-        shutdown_command = value;
-        do_shutdown = true;
+    if (access("/.cell", F_OK) !=  0) {
+        if (name == "sys.powerctl") {
+            // Despite the above comment, we can't call HandlePowerctlMessage() in this function,
+            // because it modifies the contents of the action queue, which can cause the action queue
+            // to get into a bad state if this function is called from a command being executed by the
+            // action queue.  Instead we set this flag and ensure that shutdown happens before the next
+            // command is run in the main init loop.
+            // TODO: once property service is removed from init, this will never happen from a builtin,
+            // but rather from a callback from the property service socket, in which case this hack can
+            // go away.
+            shutdown_command = value;
+            do_shutdown = true;
+        }
     }
 
     if (property_triggers_enabled) ActionManager::GetInstance().QueuePropertyChange(name, value);
